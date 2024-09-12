@@ -1,13 +1,13 @@
-name: Python CI
+name: Python CII
 
 # Especifica quando rodar o workflow (a cada push ou pull request na branch main)
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 # Define o job do CI
 jobs:
