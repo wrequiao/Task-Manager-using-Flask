@@ -1,4 +1,4 @@
-name: Python CII
+name: Python CI
 
 # Especifica quando rodar o workflow (a cada push ou pull request na branch main)
 on:
@@ -12,7 +12,7 @@ on:
 # Define o job do CI
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: python:3.9-slim-buster
 
     # Define os passos do CI
     steps:
