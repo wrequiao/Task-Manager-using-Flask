@@ -28,6 +28,5 @@ EXPOSE 5000
 
 # Comando para rodar a aplicação Flask
 #CMD ["flask", "run", "--host=0.0.0.0"]
-#CMD ["python3", "run.py"]
 CMD ["python", "-m", "flask", "run"]
 
