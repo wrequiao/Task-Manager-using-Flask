@@ -1,4 +1,4 @@
-from todo_project import db, login_manager
+from todo_project import db, login_manager, app
 from datetime import datetime
 from flask_login import UserMixin
 
@@ -26,3 +26,6 @@ class Task(db.Model):
 
     def __repr__(self):
         return f"Task('{self.content}', '{self.date_posted}', '{self.user_id}')"
+    
+with app.app_context():
+    db.create_all()

@@ -63,3 +63,12 @@ Change your username and password. You can access this by clicking dropdown in t
 
 ![Image of Yaktocat](output/account-settings.jpg)
 
+
+## Rodando no Docker
+acesse o diretório todo_project e rode o comando:
+
+docker build -t todoapp . 
+
+depois rode o comando:
+
+docker run -p 5000:5000 todoapp 
