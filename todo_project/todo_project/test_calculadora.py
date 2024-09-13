@@ -8,3 +8,5 @@ def test_soma_negativos():
 
 def test_soma_zero():
     assert soma(0, 0) == 0
+
+    
