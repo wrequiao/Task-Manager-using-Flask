@@ -1,6 +1,6 @@
-name: Python CI
+name: PythonCI
 
-# Especifica quando rodar o workflow (a cada push ou pull request na branch main)
+# Especifica quando rodar o workflow (a cada push ou pull request na branch main) 
 on:
   push:
     branches:
@@ -9,10 +9,10 @@ on:
     branches:
       - master
 
-# Define o job do CI
+# Define o job do CI.
 jobs:
   build:
-    runs-on: python:3.9-slim-buster
+    runs-on: ubuntu-latest
 
     # Define os passos do CI
     steps:
@@ -35,4 +35,6 @@ jobs:
       # Passo 4: Roda os testes (ou compila o código se houver algum processo de build)
       #- name: Run tests
        # run: |
-        #  python -m unittest discover
+        ####  python -m unittest discover
+
+
