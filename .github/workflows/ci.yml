@@ -37,4 +37,29 @@ jobs:
        # run: |
         ####  python -m unittest discover
 
+  test:
+      needs: build
+      name: CI (Test & Validations)
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+        
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.8'
+        
+        - name: Run tests with coverage
+          run: |
+            pip install pytest pytest-cov
+            pytest --cov=./ --cov-report=xml
+        
+        - name: Upload coverage to Codecov
+          uses: codecov/codecov-action@v2
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            file: ./coverage.xml
+            fail_ci_if_error: true
+          continue-on-error: true  
 
