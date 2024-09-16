@@ -1,6 +1,6 @@
 import pytest
 from flask import Flask
-from todo_project.calculadora import soma
+from calculadora import soma
 
 def test_soma_positivos():
     assert soma(2, 3) == 5
