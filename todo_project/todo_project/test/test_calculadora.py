@@ -1,4 +1,5 @@
 import pytest
+from flask import Flask
 from todo_project.calculadora import soma
 
 def test_soma_positivos():
