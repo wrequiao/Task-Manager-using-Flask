@@ -1,4 +1,5 @@
-from calculadora import soma
+import pytest
+from todo_project.calculadora import soma
 
 def test_soma_positivos():
     assert soma(2, 3) == 5
