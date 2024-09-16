@@ -58,7 +58,7 @@ jobs:
         - name: Run tests with coverage.
           run: |
             pip install pytest pytest-cov
-            pytest --cov=todo_project --cov-report=xml
+            pytest --cov=todo_project/todo_project --cov-report=xml
         
 
         #- name: Upload coverage to Codecov
