@@ -22,26 +22,26 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-    test:
-      needs: build
-      name: CI (Test & Validations)v2
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: 3.x
-        - name: Install dependencies of tests
-          run: |
-            python -m pip install --upgrade pip
-            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        - name: Run tests pytest with coverage..
-          run: |
-            pip install pytest pytest-cov
-            pytest --cov=todo_project --cov-report=xml
-        - name: Run tests unittest
-          run: |
-            python -m unittest discover
+  
+  test:
+    needs: build
+    name: CI (Test & Validations)v2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install dependencies of tests
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run tests pytest with coverage..
+        run: |
+          pip install pytest pytest-cov
+          pytest --cov=todo_project --cov-report=xml
+      - name: Run tests unittest
+        run: |
+          python -m unittest discover
