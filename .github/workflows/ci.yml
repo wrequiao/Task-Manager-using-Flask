@@ -51,7 +51,7 @@ jobs:
           python -m unittest discover
 
   bandit:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -62,7 +62,7 @@ jobs:
         uses: PyCQA/bandit-action@v1
 
   dependency_check:
-    needs: build
+    needs: bandit
     runs-on: ubuntu-latest
     name: Dependency-Check
     steps:
@@ -96,7 +96,7 @@ jobs:
           path: ${{github.workspace}}/reports
   
   zap_test:
-      needs: build
+      needs: dependency_check
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
@@ -127,7 +127,7 @@ jobs:
           run: docker stop flask-container
 
   deployDockercontainer:
-    needs: [build]
+    needs: zap_test
     name: CD (Deploy on Docker Hub)..
     runs-on: ubuntu-latest
     environment: production
