@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-  
+
   test:
     needs: build
     name: CI (Test & Validations)v2
@@ -45,3 +45,14 @@ jobs:
       - name: Run tests unittest
         run: |
           python -m unittest discover
+
+  bandit:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Perform Bandit Analysis
+        uses: PyCQA/bandit-action@v1
+
