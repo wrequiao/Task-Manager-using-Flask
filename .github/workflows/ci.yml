@@ -109,11 +109,11 @@ jobs:
           with:
             target: "http://localhost:5000"
 
-        - name: Upload ZAP Report
+        - name: Upload ZAP Report.
           uses: actions/upload-artifact@v4
           with:
             name: ZAP Report
-            path: zap_report.html
+            path: ${{github.workspace}}/reports/zap_report.html
 
         - name: Stop Docker container
           if: always()
