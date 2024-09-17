@@ -114,6 +114,7 @@ jobs:
           with:
             name: ZAP Report
             path: ${{github.workspace}}/reports/zap_report.html
+            compression-level: 9
 
         - name: Stop Docker container
           if: always()
