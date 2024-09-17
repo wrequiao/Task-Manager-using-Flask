@@ -126,7 +126,7 @@ jobs:
 
   deployDockercontainer:
     needs: [build]
-    name: CD (Deploy on Docker Hub)
+    name: CD (Deploy on Docker Hub)..
     runs-on: ubuntu-latest
     environment: production
     steps:
