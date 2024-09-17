@@ -37,12 +37,12 @@ jobs:
 
       # Passo 4: Roda os testes (ou compila o código se houver algum processo de build)
       #- name: Run tests
-      #  run: |
-      #    python -m unittest discover
+        #run: |
+          #python -m unittest discover
 
-  test:
+    test:
       needs: build
-      name: CI (Test & Validations)
+      name: CI (Test & Validations)v2
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
