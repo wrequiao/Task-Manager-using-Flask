@@ -22,6 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
     test:
       needs: build
       name: CI (Test & Validations)v2
