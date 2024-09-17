@@ -138,7 +138,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-        continue-on-error: false  # Continua mesmo se o login falhar
+        #continue-on-error: false  # Continua mesmo se o login falhar
       
       - name: Build Docker image
         #run: |
