@@ -125,7 +125,7 @@ jobs:
           run: docker stop flask-container
 
   deployDockercontainer:
-    #needs: [test, security_tests]
+    needs: [build]
     name: CD (Deploy on Docker Hub)
     runs-on: ubuntu-latest
     environment: production
