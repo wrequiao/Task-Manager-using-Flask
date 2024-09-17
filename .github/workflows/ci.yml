@@ -112,8 +112,8 @@ jobs:
         - name: Upload ZAP Report.
           uses: actions/upload-artifact@v4
           with:
-            name: ZAP Report
-            path: ${{github.workspace}}/reports/zap_report.html
+            name: zap-report
+            path: report_html.html
             compression-level: 9
 
         - name: Stop Docker container
