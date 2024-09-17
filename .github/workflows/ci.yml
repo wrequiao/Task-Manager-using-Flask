@@ -20,6 +20,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
       # Passo 2: Configura a versão do Python
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,8 +37,8 @@ jobs:
 
       # Passo 4: Roda os testes (ou compila o código se houver algum processo de build)
       #- name: Run tests
-       # run: |
-        ####  python -m unittest discover
+      #  run: |
+      #    python -m unittest discover
 
   test:
       needs: build
@@ -55,11 +58,15 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-        - name: Run tests with coverage..
+        - name: Run tests pytest with coverage..
           run: |
             pip install pytest pytest-cov
             pytest --cov=todo_project --cov-report=xml
-        
+
+      # Passo 4: Roda os testes (ou compila o código se houver algum processo de build)
+      - name: Run tests unittest
+          run: |
+          python -m unittest discover
 
         #- name: Upload coverage to Codecov
         #  uses: codecov/codecov-action@v2

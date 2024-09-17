@@ -19,8 +19,7 @@ COPY . .
 
 # Define a variável de ambiente para indicar que estamos rodando em modo produção
 #ENV FLASK_ENV=/todo_project/__ini__.py
-
-ENV FLASK_APP=/todo_project/run.py
+ENV FLASK_APP=todo_project/run.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 # Expõe a porta 5000 para acessar a aplicação Flask
@@ -28,5 +27,10 @@ EXPOSE 5000
 
 # Comando para rodar a aplicação Flask
 #CMD ["flask", "run", "--host=0.0.0.0"]
+
+#CMD ["flask", "run"]
+
 CMD ["python", "-m", "flask", "run"]
+#RUN chmod +x todo_project/start/entrypoint.sh
+#CMD ["todo_project/start/entrypoint.sh"]
 
