@@ -8,7 +8,7 @@ on:
       - master
 
 env:
-  IMAGE_NAME: pythonflasktutorialdi
+  IMAGE_NAME: pythonflasktutorial_hdb
   
 jobs:
   build:
@@ -29,7 +29,7 @@ jobs:
 
   test:
     needs: build
-    name: CI (Test & Validations)v2
+    name: CI (Test & Validations)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -51,6 +51,7 @@ jobs:
           python -m unittest discover
 
   bandit:
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -95,6 +96,7 @@ jobs:
           path: ${{github.workspace}}/reports
   
   zap_test:
+      needs: build
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
