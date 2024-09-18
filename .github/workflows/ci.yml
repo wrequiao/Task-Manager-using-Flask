@@ -9,6 +9,7 @@ on:
 
 env:
   IMAGE_NAME: pythonflasktutorial_hdb
+  EMAIL_ALERTA: wrequiao@gmail.com
   
 jobs:
   build:
@@ -207,5 +208,47 @@ jobs:
               traces_sample_rate=1.0
           )
           " >> app.py
+
+      # Step 7: Set up alerts for security threats (e.g., brute force attacks)
+      - name: Set up alert rules
+        run: |
+          # Configure alert rules in ELK Stack
+          # For example, detect excessive failed logins
+          echo '
+          POST _watcher/watch/_start
+          {
+            "trigger": {
+              "schedule": { "interval": "10s" }
+            },
+            "input": {
+              "search": {
+                "request": {
+                  "indices": [ "flask-logs" ],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "filter": [
+                          { "range": { "@timestamp": { "from": "now-10s" } } },
+                          { "match": { "log_level": "ERROR" } }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "condition": {
+              "compare": { "ctx.payload.hits.total": { "gte": 5 } }
+            },
+            "actions": {
+              "email_admin": {
+                "email": {
+                  "to": "${{ env.EMAIL_ALERTA }},
+                  "subject": "Alert: Possible brute force attack detected",
+                  "body": "Multiple failed login attempts detected."
+                }
+              }
+            }
+          }' | curl -X PUT "localhost:9200/_watcher/watch/brute_force_alert" -H "Content-Type: application/json" -d @-
                    
                 
