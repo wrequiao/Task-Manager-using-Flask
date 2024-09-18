@@ -218,7 +218,7 @@ jobs:
           POST _watcher/watch/_start
           {
             "trigger": {
-              "schedule": { "interval": "10s" }
+              "schedule": { "interval": "30s" }
             },
             "input": {
               "search": {
@@ -228,7 +228,7 @@ jobs:
                     "query": {
                       "bool": {
                         "filter": [
-                          { "range": { "@timestamp": { "from": "now-10s" } } },
+                          { "range": { "@timestamp": { "from": "now-30s" } } },
                           { "match": { "log_level": "ERROR" } }
                         ]
                       }
