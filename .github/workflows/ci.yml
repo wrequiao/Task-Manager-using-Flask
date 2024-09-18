@@ -250,7 +250,5 @@ jobs:
                 }
               }
             }
-          }' | 
-              curl -X PUT "localhost:9200/_watcher/watch/brute_force_alert" -H "Content-Type: application/json" -d @-
-                   
+          }'       
                 
