@@ -194,6 +194,10 @@ jobs:
           sudo systemctl enable logstash.service
           sudo systemctl start logstash.service
 
+          sudo systemctl daemon-reload
+          sudo systemctl enable elasticsearch.service
+          sudo systemctl start elasticsearch.service
+
           # Step 6.2: Set up Sentry for error monitoring
           pip install sentry-sdk
           
