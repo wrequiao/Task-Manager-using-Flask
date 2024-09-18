@@ -147,5 +147,45 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           exit 0  
 
+       # Step 6: Install and configure monitoring tools (ELK + Sentry)
+      - name: Set up monitoring tools
+        run: |
+          # Step 6.1: Set up ELK (Elasticsearch, Logstash, Kibana)
+          sudo apt-get update
+          sudo apt-get install -y elasticsearch logstash kibana
+          sudo systemctl enable elasticsearch.service
+          sudo systemctl start elasticsearch.service
           
+          # Configure Logstash to monitor logs
+          echo "
+          input {
+            file {
+              path => '/var/log/flask/app.log'
+              start_position => 'beginning'
+            }
+          }
+          output {
+            elasticsearch {
+              hosts => ['localhost:9200']
+            }
+          }" | sudo tee /etc/logstash/conf.d/logstash.conf
+          
+          sudo systemctl enable logstash.service
+          sudo systemctl start logstash.service
+
+          # Step 6.2: Set up Sentry for error monitoring
+          pip install sentry-sdk
+          
+          # Configure Sentry in the Flask app
+          echo "
+          import sentry_sdk
+          from sentry_sdk.integrations.flask import FlaskIntegration
+          
+          sentry_sdk.init(
+              dsn=${{ secrets.SENTRY_DSN }},
+              integrations=[FlaskIntegration()],
+              traces_sample_rate=1.0
+          )
+          " >> app.py
+                   
                 
