@@ -148,13 +148,33 @@ jobs:
           exit 0  
 
        # Step 6: Install and configure monitoring tools (ELK + Sentry)
-      - name: Set up monitoring tools
+      - name: Set up ELK Stack (Elasticsearch, Logstash, Kibana)
         run: |
-          # Step 6.1: Set up ELK (Elasticsearch, Logstash, Kibana)
+          # Step 6.1: Add the Elastic GPG key
+          curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+
+          # Step 6.2: Add the Elastic APT repository
+          sudo apt-get install apt-transport-https
+          echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list
+
+          # Step 6.3: Update and install ELK Stack
           sudo apt-get update
-          sudo apt-get install -y elasticsearch logstash kibana
+          sudo apt-get install elasticsearch logstash kibana -y
+
+          # Step 6.4: Enable and start Elasticsearch
           sudo systemctl enable elasticsearch.service
           sudo systemctl start elasticsearch.service
+
+          # Step 6.5: Enable and start Logstash
+          sudo systemctl enable logstash.service
+          sudo systemctl start logstash.service
+
+          # Step 6.6: Enable and start Kibana
+          sudo systemctl enable kibana.service
+          sudo systemctl start kibana.service
+
+          # Optional: Add Kibana setup script for automation
+          echo "ELK Stack installed and started successfully"
           
           # Configure Logstash to monitor logs
           echo "
