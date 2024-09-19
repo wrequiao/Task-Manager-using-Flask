@@ -217,6 +217,12 @@ jobs:
               echo '1.666666666'
               #curl -X GET "localhost:9200"
               sudo cat /etc/elasticsearch/elasticsearch.yml
+              sudo sed -i 's/#network\.host: 192\.168\.0\.1/network.host: 0.0.0.0/' /etc/elasticsearch/elasticsearch.yml
+              sudo sed -i 's/#http\.port: 9200/http.port: 9200/' /etc/elasticsearch/elasticsearch.yml
+              echo '2.666666666'
+              #curl -X GET "localhost:9200"
+              sudo cat /etc/elasticsearch/elasticsearch.yml
+              sudo systemctl restart elasticsearch
 
       # Step 3: Criar o alerta de tentativas excessivas de login no Elasticsearch
       - name: Set up login failure alert in Elasticsearch
