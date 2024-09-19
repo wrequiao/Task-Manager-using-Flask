@@ -174,14 +174,17 @@ jobs:
           sudo systemctl start kibana.service
           
           # 1.5 verificando retorno.
+          echo '1.5'
           sudo systemctl status elasticsearch
 
           # 1.6 pingando.
+          echo '1.6'
           curl -X GET "localhost:9200"
 
           # 1.7 verificando log.
+          echo '1.7'
           sudo cat /var/log/elasticsearch/elasticsearch.log
-          
+
       # Step 2: Configurar Logstash para monitorar logs de autenticação
       - name: Configure Logstash to monitor authentication logs
         run: |
