@@ -172,18 +172,6 @@ jobs:
           
           sudo systemctl enable kibana.service
           sudo systemctl start kibana.service
-          
-          # 1.5 verificando retorno.
-          echo '1.5'
-          sudo systemctl status elasticsearch
-
-          # 1.6 pingando.
-          echo '1.6'
-          curl -X GET "localhost:9200"
-
-          # 1.7 verificando log.
-          echo '1.7'
-          sudo cat /var/log/elasticsearch/elasticsearch.log
 
       # Step 2: Configurar Logstash para monitorar logs de autenticação
       - name: Configure Logstash to monitor authentication logs
@@ -214,8 +202,21 @@ jobs:
           }
           " | sudo tee /etc/logstash/conf.d/auth_logstash.conf
 
-          # Reiniciar o Logstash para aplicar a configuração
-          sudo systemctl restart logstash.service
+              # Reiniciar o Logstash para aplicar a configuração
+              sudo systemctl restart logstash.service
+
+              # 222.5 verificando retorno.
+              echo '1.5'
+              sudo systemctl status elasticsearch
+
+              # 22222.6 verificando log.
+              echo '1.7'
+              sudo cat /var/log/elasticsearch/elasticsearch.log
+
+              # 222222.7 pingando.
+              echo '1.6'
+              curl -X GET "localhost:9200"
+
 
       # Step 3: Criar o alerta de tentativas excessivas de login no Elasticsearch
       - name: Set up login failure alert in Elasticsearch
@@ -275,8 +276,3 @@ jobs:
           )
           " >> app.py
 
-      # Step 5: Configurar regras de segurança adicionais
-      - name: Set up additional security rules
-        run: |
-          # Exemplo: Adicionar mais regras de segurança
-          echo "Adicionando regras adicionais de segurança"
