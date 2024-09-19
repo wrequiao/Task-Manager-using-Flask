@@ -206,17 +206,17 @@ jobs:
               sudo systemctl restart logstash.service
 
               # 222.5 verificando retorno.
-              echo '1.5'
-              sudo systemctl status elasticsearch
+              # echo '1.5'
+              #sudo systemctl status elasticsearch
 
               # 22222.6 verificando log.
-              echo '1.7'
-              sudo cat /var/log/elasticsearch/elasticsearch.log
+              # echo '1.7'
+              #sudo cat /var/log/elasticsearch/elasticsearch.log
 
               # 222222.7 pingando.
-              echo '1.6'
-              curl -X GET "localhost:9200"
-
+              echo '1.666666666'
+              #curl -X GET "localhost:9200"
+              sudo cat /etc/elasticsearch/elasticsearch.yml
 
       # Step 3: Criar o alerta de tentativas excessivas de login no Elasticsearch
       - name: Set up login failure alert in Elasticsearch
