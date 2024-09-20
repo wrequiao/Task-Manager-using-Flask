@@ -219,7 +219,7 @@ jobs:
               sudo sed -i 's/#network\.host: 192\.168\.0\.1/network.host: localhost/' /etc/elasticsearch/elasticsearch.yml
               sudo sed -i 's/#http\.port: 9200/http.port: 9200/' /etc/elasticsearch/elasticsearch.yml
               sudo sed -i 's/http\.host: 0\.0\.0\.0/#http.host: 0.0.0.0/' /etc/elasticsearch/elasticsearch.yml
-              sudo sed -i 's/# address here to expose this node on the network:/network.bind_host 0.0.0.0/' /etc/elasticsearch/elasticsearch.yml
+              sudo sed -i 's/# address here to expose this node on the network:/network.bind_host: 0.0.0.0/' /etc/elasticsearch/elasticsearch.yml
               
               echo '2.666666666'
               sudo cat /etc/elasticsearch/elasticsearch.yml
