@@ -9,6 +9,7 @@ on:
 
 env:
   IMAGE_NAME: pythonflasktutorial_hdb
+  EMAIL_ALERTA: wrequiao@gmail.com
   
 jobs:
   build:
@@ -147,76 +148,109 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           exit 0  
 
-      
-      # Step 1: Configurar Elasticsearch, Logstash e Kibana
+       # Step 6: Install and configure monitoring tools (ELK + Sentry)
       - name: Set up ELK Stack (Elasticsearch, Logstash, Kibana)
         run: |
-          # 1.1 Adicionar chave GPG do Elasticsearch
+          # Step 6.1: Add the Elastic GPG key
           curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
-          
-          # 1.2 Adicionar o repositório APT do Elasticsearch
+
+          # Step 6.2: Add the Elastic APT repository
           sudo apt-get install apt-transport-https
           echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list
-          
-          # 1.3 Atualizar e instalar o ELK Stack
+
+          # Step 6.3: Update and install ELK Stack
           sudo apt-get update
           sudo apt-get install elasticsearch logstash kibana -y
-          
-          # 1.4 Habilitar e iniciar os serviços
+
+          # Step 6.4: Enable and start Elasticsearch
+          sudo systemctl daemon-reload
           sudo systemctl enable elasticsearch.service
           sudo systemctl start elasticsearch.service
-          
+
+          # Step 6.5: Enable and start Logstash
           sudo systemctl enable logstash.service
           sudo systemctl start logstash.service
-          
+
+          # Step 6.6: Enable and start Kibana
           sudo systemctl enable kibana.service
           sudo systemctl start kibana.service
 
-      # Step 2: Configurar Logstash para monitorar logs de autenticação
-      - name: Configure Logstash to monitor authentication logs
-        run: |
+          # Optional: Add Kibana setup script for automation
+          echo "ELK Stack installed and started successfully"
+          
+          # Configure Logstash to monitor logs
           echo "
           input {
             file {
-              path => '/var/log/auth.log'  # Caminho para o log de autenticação
+              path => '/var/log/flask/app.log'
               start_position => 'beginning'
-              sincedb_path => '/dev/null'
-            }
-          }
-          filter {
-            if [message] =~ /Failed password/ {
-              grok {
-                match => { 'message' => '%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\[%{NUMBER:pid}\]: Failed password for %{WORD:authentication_method} from %{IP:ip_address} port %{NUMBER:port}' }
-              }
-              date {
-                match => [ 'timestamp', 'MMM  d HH:mm:ss', 'MMM dd HH:mm:ss' ]
-              }
             }
           }
           output {
             elasticsearch {
               hosts => ['localhost:9200']
-              index => 'auth-logs'
             }
-          }
-          " | sudo tee /etc/logstash/conf.d/auth_logstash.conf
+          }" | sudo tee /etc/logstash/conf.d/logstash.conf
+          
+          sudo systemctl enable logstash.service
+          sudo systemctl start logstash.service
 
-              # Reiniciar o Logstash para aplicar a configuração
-              sudo systemctl restart logstash.service
-
-
-      # Step 4: (Opcional) Instalar Sentry para monitoramento de erros em apps
-      - name: Install Sentry for error monitoring
-        run: |
+          # Step 6.2: Set up Sentry for error monitoring
           pip install sentry-sdk
+          
+          # Configure Sentry in the Flask app
           echo "
           import sentry_sdk
           from sentry_sdk.integrations.flask import FlaskIntegration
           
           sentry_sdk.init(
-              dsn='${{ secrets.SENTRY_DSN }}',
+              dsn=${{ secrets.SENTRY_DSN }},
               integrations=[FlaskIntegration()],
               traces_sample_rate=1.0
           )
           " >> app.py
 
+      # Step 7: Set up alerts for security threats (e.g., brute force attacks)
+      - name: Set up alert rules
+        run: |
+          # Configure alert rules in ELK Stack
+          # For example, detect excessive failed logins
+          echo '
+          POST _watcher/watch/_start
+          {
+            "trigger": {
+              "schedule": { "interval": "30s" }
+            },
+            "input": {
+              "search": {
+                "request": {
+                  "indices": [ "flask-logs" ],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "filter": [
+                          { "range": { "@timestamp": { "from": "now-30s" } } },
+                          { "match": { "log_level": "ERROR" } }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "condition": {
+              "compare": { "ctx.payload.hits.total": { "gte": 5 } }
+            },
+            "actions": {
+              "email_admin": {
+                "email": {
+                  "to": "${{ env.EMAIL_ALERTA }},
+                  "subject": "Alert: Possible brute force attack detected",
+                  "body": "Multiple failed login attempts detected."
+                }
+              }
+            }
+          }' #| 
+          #curl -X PUT "localhost:9200/_watcher/watch/brute_force_alert" -H "Content-Type: application/json" -d @-
+                   
+                
