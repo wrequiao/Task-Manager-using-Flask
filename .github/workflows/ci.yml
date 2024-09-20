@@ -14,6 +14,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Build
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -30,7 +31,7 @@ jobs:
 
   test:
     needs: build
-    name: CI (Test & Validations)
+    name: CI (Testes unitários, integração e funcionais)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -54,6 +55,7 @@ jobs:
   bandit:
     needs: test
     runs-on: ubuntu-latest
+    name: SAST Bandit (Analisando vulnerabilidades)
     permissions:
       security-events: write
       actions: read
@@ -65,7 +67,7 @@ jobs:
   dependency_check:
     needs: bandit
     runs-on: ubuntu-latest
-    name: Dependency-Check
+    name: Owasp Dependency-check
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -99,6 +101,7 @@ jobs:
   zap_test:
       needs: dependency_check
       runs-on: ubuntu-latest
+      name: OWASP ZAP (DAST)
       steps:
         - name: Checkout code
           uses: actions/checkout@v2
@@ -111,17 +114,17 @@ jobs:
             docker run -d -p 5000:5000 --name flask-container flask-app
             sleep 10
 
-        #- name: ZAP Scan.
-        #  uses: zaproxy/action-full-scan@v0.10.0
-        #  with:
-        #    target: "http://localhost:5000"
+        - name: ZAP Scan.
+          uses: zaproxy/action-full-scan@v0.10.0
+          with:
+            target: "http://localhost:5000"
 
-        #- name: Upload ZAP Report.
-        #  uses: actions/upload-artifact@v4
-        #  with:
-        #    name: zap-report
-        #    path: report_html.html
-        #    compression-level: 9
+        - name: Upload ZAP Report.
+          uses: actions/upload-artifact@v4
+          with:
+            name: zap-report
+            path: report_html.html
+            compression-level: 9
 
         - name: Stop Docker container
           if: always()
@@ -129,7 +132,7 @@ jobs:
 
   ElasticsearchLogstashKiban:
     needs: zap_test
-    name: Elasticsearch, Logstash, Kiban
+    name: Elasticsearch, Logstash, Kiban, Sentry (Feedback, Monitoramento e Logs)
     runs-on: ubuntu-latest
     environment: production
     steps:
